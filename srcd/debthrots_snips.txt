@@ -1,0 +1,88 @@
+// SNIPPET: Throttle (Leading Edge)
+function throttle(func, delay) {
+    let isInCooldown = false;
+    
+    return function(...args) {
+        console.log("Event received.");
+        if (isInCooldown) {
+            console.log("   └── Currently in cooldown. Ignoring event.");
+            return;
+        }
+
+        console.log("✅ Cooldown is over. Executing function.");
+        func.apply(this, args);
+        isInCooldown = true;
+
+        setTimeout(() => {
+            isInCooldown = false;
+            console.log("   └── Cooldown period ended. Ready for next event.");
+        }, delay);
+    };
+}
+
+// SNIPPET: Debounce (Trailing Edge)
+function debounceTrailing(func, delay) {
+    let timeoutId;
+    
+    return function(...args) {
+        console.log("Event received. Resetting timer.");
+        
+        // Clear the previous timer on every new event
+        clearTimeout(timeoutId);
+
+        // Set a new timer
+        timeoutId = setTimeout(() => {
+            console.log("✅ Quiet period passed. Executing function.");
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+// SNIPPET: Debounce (Leading Edge)
+function debounceLeading(func, delay) {
+    let timeoutId = null;
+    
+    return function(...args) {
+        console.log("Event received.");
+        
+        // If no timer is active, it's the first call in a burst
+        if (!timeoutId) {
+            console.log("✅ This is the LEADING edge. Executing function immediately.");
+            func.apply(this, args);
+        } else {
+            console.log("   └── Already in a burst. Ignoring this execution.");
+        }
+
+        // Always reset the timer to extend the quiet period
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            timeoutId = null; // End the burst
+            console.log("   └── Quiet period passed. Ready for a new burst.");
+        }, delay);
+    };
+}
+
+// SNIPPET: Debounce by Click Count
+function debounceByCount(func, ignoreCount) {
+    let isIgnoring = false;
+    let ignoredClickCount = 0;
+    
+    return function(...args) {
+        console.log("Click event received.");
+
+        if (isIgnoring) {
+            ignoredClickCount++;
+            console.log(`   └── Ignoring click ${ignoredClickCount} of ${ignoreCount}.`);
+            if (ignoredClickCount >= ignoreCount) {
+                isIgnoring = false;
+                ignoredClickCount = 0;
+                console.log("   └── Button is now active again.");
+            }
+            return;
+        }
+
+        console.log(`✅ Executing action. The next ${ignoreCount} clicks will be ignored.`);
+        func.apply(this, args);
+        isIgnoring = true;
+    };
+}
