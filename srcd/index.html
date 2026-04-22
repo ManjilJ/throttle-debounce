@@ -95,6 +95,17 @@
 </head>
 <body>
     <div class="main-wrapper">
+        <div
+          style="
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          "
+        >
+          <input type="checkbox" id="toggle-spectrum" value="true" checked />
+          <label for="toggle-spectrum">Spaces (in-between) Visible</label>
+        </div>        
         <div class="container" id="container-throttle">
             <div class="header-container"><h2>Throttle (Leading)</h2><div class="button-group"><button id="throttle-code-btn" class="code-button">Handler Code</button><button id="throttle-reset" class="reset-button">Reset</button></div></div>
             <div class="visual-timer-container"><div class="visual-timer-bar" id="bar-throttle"></div></div>
